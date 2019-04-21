@@ -1,25 +1,112 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import axios from 'axios';
 import './App.css';
 
+import CaptainMarvel from './images/CaptainMarvel.jpg';
+import Shazam from './images/Shazam.jpg';
+import Avengers from './images/Avengers.jpg';
+
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      movies: []
+    }
+  }
+
+  componentDidMount() {
+    this.fetchMovies();
+  }
+
+  async fetchMovies() {
+    const movies = await axios.get('/api/movies');
+    this.setState({ movies: movies.data });
+  }
+
+  async voteMovie(id) {
+    const movie = await axios.post('/api/movies', { id });
+    this.setState(prevState => {
+      const movies = _.unionBy([movie.data], prevState.movies, 'movie_id');
+      return { movies }
+    });
+  }
+
   render() {
+    const { movies } = this.state;
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        <nav className="navbar is-primary" role="navigation" aria-label="main navigation">
+          <section className="container">
+            <div className="navbar-brand">
+              <strong className="navbar-item">Movie Voting 2019</strong>
+            </div>
+          </section>
+        </nav>
+        <section className="section">
+          <div className="container">
+            <div className="columns">
+              <div className="column">
+                <div className="card">
+                  <div className="card-image">
+                    <figure className="image is-2by3">
+                      <img src={CaptainMarvel} alt="Captain Marvel"/>
+                    </figure>
+                  </div>
+                  <div className="card-content">
+                    <div className="content">
+                      Votes: {_.get(_.find(movies, { movie_id: 1 }), 'votes', 0)}
+                    </div>
+                  </div>
+                  <div className="card-content">
+                    <div className="content">
+                      <button className="button is-primary" onClick={() => this.voteMovie(1)}>Vote!</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="column">
+                <div className="card">
+                  <div className="card-image">
+                    <figure className="image is-2by3">
+                      <img src={Shazam} alt="Shazam!"/>
+                    </figure>
+                  </div>
+                  <div className="card-content">
+                    <div className="content">
+                      Votes: {_.get(_.find(movies, { movie_id: 2 }), 'votes', 0)}
+                    </div>
+                  </div>
+                  <div className="card-content">
+                    <div className="content">
+                      <button className="button is-primary" onClick={() => this.voteMovie(2)}>Vote!</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="column">
+                <div className="card">
+                  <div className="card-image">
+                    <figure className="image is-2by3">
+                      <img src={Avengers} alt="Avengers"/>
+                    </figure>
+                  </div>
+                  <div className="card-content">
+                    <div className="content">
+                      Votes: {_.get(_.find(movies, { movie_id: 3 }), 'votes', 0)}
+                    </div>
+                  </div>
+                  <div className="card-content">
+                    <div className="content">
+                      <button className="button is-primary" onClick={() => this.voteMovie(3)}>Vote!</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     );
   }
