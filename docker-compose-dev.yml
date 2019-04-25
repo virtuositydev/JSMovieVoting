@@ -3,20 +3,26 @@ version: '3'
 services:
   postgres:
     image: 'postgres:11.2-alpine'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ./.envs/.local/.postgres
+    networks:
+      - movie_voting
 
   api:
     build:
       context: ./server
       dockerfile: Dockerfile-dev
+    depends_on:
+      - postgres
     volumes:
       - /app/node_modules
       - ./server:/app
-    environment:
-      - PGUSER=postgres
-      - PGHOST=postgres
-      - PGDATABASE=postgres
-      - PGPASSWORD=postgres_password
-      - PGPORT=5432
+    env_file:
+      - ./.envs/.local/.postgres
+    networks:
+      - movie_voting
 
   client:
     build:
@@ -25,11 +31,24 @@ services:
     volumes:
       - /app/node_modules
       - ./client:/app
+    networks:
+      - movie_voting
 
   nginx:
     build:
       context: ./nginx
       dockerfile: Dockerfile-dev
+    depends_on:
+      - api
+      - client
     restart: always
     ports:
       - '3050:80'
+    networks:
+      - movie_voting
+
+volumes:
+  postgres_data:
+
+networks:
+  movie_voting:

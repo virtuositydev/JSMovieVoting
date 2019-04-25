@@ -32,9 +32,6 @@
   }
 }
 
-.column {
-  /* padding: 3em; */
-}
 .card-content {
   display: flex;
   justify-content: center;

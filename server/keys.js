@@ -1,7 +1,7 @@
 module.exports = {
-  pgUser: process.env.PGUSER,
-  pgHost: process.env.PGHOST,
-  pgDatabase: process.env.PGDATABASE,
-  pgPassword: process.env.PGPASSWORD,
-  pgPort: process.env.PGPORT,
+  pgHost: process.env.POSTGRES_HOST,
+  pgDatabase: process.env.POSTGRES_DB,
+  pgPort: process.env.POSTGRES_PORT,
+  pgUser: process.env.POSTGRES_USER,
+  pgPassword: process.env.POSTGRES_PASSWORD,
 };
