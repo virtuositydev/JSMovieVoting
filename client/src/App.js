@@ -21,12 +21,12 @@ class App extends Component {
   }
 
   async fetchMovies() {
-    const movies = await axios.get('/api/movies');
+    const movies = await axios.get(`${process.env.REACT_APP_API_URL}/movies`);
     this.setState({ movies: movies.data });
   }
 
   async voteMovie(id) {
-    const movie = await axios.post('/api/movies', { id });
+    const movie = await axios.post(`${process.env.REACT_APP_API_URL}/movies`, { id });
     this.setState(prevState => {
       const movies = _.unionBy([movie.data], prevState.movies, 'movie_id');
       return { movies }

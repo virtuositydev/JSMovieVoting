@@ -3,52 +3,50 @@ version: '3'
 services:
   postgres:
     image: 'postgres:11.2-alpine'
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - dev
+    container_name: 'movie_voting_postgress'
     env_file:
       - ./.envs/.local/.postgres
-    networks:
-      - movie_voting
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   api:
     build:
       context: ./server
       dockerfile: Dockerfile-dev
+    networks:
+      - dev
+    container_name: 'movie_voting_api'
     depends_on:
       - postgres
+    env_file:
+      - ./.envs/.local/.postgres
     volumes:
       - /app/node_modules
       - ./server:/app
-    env_file:
-      - ./.envs/.local/.postgres
-    networks:
-      - movie_voting
+    ports:
+      - '5000:5000'
 
   client:
     build:
       context: ./client
       dockerfile: Dockerfile-dev
+    networks:
+      - dev
+    container_name: 'movie_voting_client'
+    depends_on:
+      - api
     volumes:
       - /app/node_modules
       - ./client:/app
-    networks:
-      - movie_voting
-
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile-dev
-    depends_on:
-      - api
-      - client
-    restart: always
     ports:
-      - '3050:80'
-    networks:
-      - movie_voting
+      - '80:3000'
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
 
 volumes:
   postgres_data:
 
 networks:
-  movie_voting:
+  dev:
