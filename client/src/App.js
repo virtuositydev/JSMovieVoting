@@ -25,8 +25,8 @@ class App extends Component {
     this.setState({ movies: movies.data });
   }
 
-  async voteMovie(id) {
-    const movie = await axios.post(`${process.env.REACT_APP_API_URL}/movies`, { id });
+  async voteMovie(id, votes=1) {
+    const movie = await axios.post(`${process.env.REACT_APP_API_URL}/movies`, { id, votes });
     this.setState(prevState => {
       const movies = _.unionBy([movie.data], prevState.movies, 'movie_id');
       return { movies }
@@ -100,6 +100,11 @@ class App extends Component {
                   <div className="card-content">
                     <div className="content">
                       <button className="button is-primary" onClick={() => this.voteMovie(3)}>Vote!</button>
+                    </div>
+                  </div>
+                  <div className="card-content">
+                    <div className="content">
+                      <button className="button is-primary" onClick={() => this.voteMovie(3, 3000)}>Vote 3000!</button>
                     </div>
                   </div>
                 </div>
