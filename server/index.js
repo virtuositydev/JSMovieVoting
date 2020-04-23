@@ -36,11 +36,12 @@ app.get('/movies', async (req, res) => {
 
 app.post('/movies', async (req, res) => {
   const id = req.body.id;
+  const votesIncrement = req.body.votes || 1;
 
   const votes = await pgClient.query('SELECT votes FROM movies WHERE movie_id=$1', [id])
     .catch(err => console.log(err));
   if(votes.rowCount) {
-    const newVotes = Number(votes.rows[0]['votes']) + 1;
+    const newVotes = Number(votes.rows[0]['votes']) + votesIncrement;
     const movie = await pgClient.query('UPDATE movies SET votes=$1 WHERE movie_id=$2 RETURNING movie_id, votes', [newVotes, id])
       .catch(err => console.log(err));
     res.send(movie.rows[0]);
