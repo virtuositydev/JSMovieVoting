@@ -1,0 +1,32 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+  labels:
+    app: movie-voting
+spec:
+  capacity:
+    storage: 200Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  hostPath:
+    path: /var/data/movie-voting-postgres/
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+spec:
+  resources:
+    requests:
+      storage: 200Mi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: standard
+  selector:
+    matchLabels:
+      app: movie-voting

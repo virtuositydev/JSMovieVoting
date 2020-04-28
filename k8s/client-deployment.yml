@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movie-voting
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: movie-voting
+      type: front-end
+  template:
+    metadata:
+      labels:
+        app: movie-voting
+        type: front-end
+    spec:
+      containers:
+        - name: movie-voting
+          image: vsgdev/jsmovievoting_client:3.0.0
+          imagePullPolicy: Always
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+          env:
+          - name: REACT_APP_API_URL
+            value: http://192.168.99.103:30500
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: movie-voting-service
+spec:
+  type: NodePort
+  selector:
+    app: movie-voting
+    type: front-end
+  ports:
+    - targetPort: 3000
+      port: 3000
+      nodePort: 30080
+

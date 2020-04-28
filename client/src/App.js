@@ -21,16 +21,24 @@ class App extends Component {
   }
 
   async fetchMovies() {
-    const movies = await axios.get(`${process.env.REACT_APP_API_URL}/movies`);
-    this.setState({ movies: movies.data });
+    try {
+      const movies = await axios.get(`${process.env.REACT_APP_API_URL}/movies`);
+      this.setState({ movies: movies.data });
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   async voteMovie(id, votes=1) {
-    const movie = await axios.post(`${process.env.REACT_APP_API_URL}/movies`, { id, votes });
-    this.setState(prevState => {
-      const movies = _.unionBy([movie.data], prevState.movies, 'movie_id');
-      return { movies }
-    });
+    try {
+      const movie = await axios.post(`${process.env.REACT_APP_API_URL}/movies`, { id, votes });
+      this.setState(prevState => {
+        const movies = _.unionBy([movie.data], prevState.movies, 'movie_id');
+        return { movies }
+      });
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   render() {

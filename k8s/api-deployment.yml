@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movie-voting-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: movie-voting
+      type: api
+  template:
+    metadata:
+      labels:
+        app: movie-voting
+        type: api
+    spec:
+      containers:
+        - name: movie-voting-api
+          image: vsgdev/jsmovievoting_api:3.0.0
+          imagePullPolicy: Always
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5000
+          env:
+          - name: POSTGRES_HOST
+            value: postgres-service
+          - name: POSTGRES_PORT
+            value: "5432"
+          envFrom:
+          - secretRef:
+              name: postgress-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: movie-voting-api-service
+spec:
+  type: NodePort
+  selector:
+    app: movie-voting
+    type: api
+  ports:
+    - targetPort: 5000
+      port: 5000
+      nodePort: 30500
+

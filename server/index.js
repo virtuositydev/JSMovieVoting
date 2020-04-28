@@ -47,7 +47,7 @@ app.post('/movies', async (req, res) => {
     res.send(movie.rows[0]);
   }
   else {
-    const movie = await pgClient.query('INSERT INTO movies(movie_id, votes) VALUES($1, $2) RETURNING movie_id, votes', [id, 1])
+    const movie = await pgClient.query('INSERT INTO movies(movie_id, votes) VALUES($1, $2) RETURNING movie_id, votes', [id, votesIncrement])
       .catch(err => console.log(err));
     res.send(movie.rows[0]);
   }
