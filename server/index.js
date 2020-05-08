@@ -3,10 +3,13 @@ const keys = require('./keys');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const prometheus = require('prom-client');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+
+const metricsInterval = prometheus.collectDefaultMetrics({prefix: "movie_voting_api_"});
 
 // Postgres
 const { Pool } = require('pg');
@@ -53,7 +56,27 @@ app.post('/movies', async (req, res) => {
   }
 });
 
+app.get('/metrics', (req, res) => {
+  res.set('Content-Type', prometheus.register.contentType)
+  res.end(prometheus.register.metrics())
+})
+
 app.listen(5000, err => {
   console.log('listening');
 });
+
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  clearInterval(metricsInterval)
+
+  server.close((err) => {
+    if (err) {
+      console.error(err)
+      process.exit(1)
+    }
+
+    process.exit(0)
+  })
+})
 

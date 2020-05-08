@@ -4,7 +4,8 @@
     "pg": "7.9.0",
     "cors": "2.8.5",
     "body-parser": "1.18.3",
-    "nodemon": "1.18.11"
+    "nodemon": "1.18.11",
+    "prom-client": "12.0.0"
   },
   "scripts": {
     "dev": "nodemon",
