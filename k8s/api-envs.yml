@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-envs
+data:
+  POSTGRES_HOST: postgres-service
+  POSTGRES_PORT: "5432"

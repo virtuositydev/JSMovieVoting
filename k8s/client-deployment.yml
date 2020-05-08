@@ -23,9 +23,9 @@ spec:
             httpGet:
               path: /
               port: 3000
-          env:
-          - name: REACT_APP_API_URL
-            value: http://192.168.99.103:30500
+          envFrom:
+          - configMapRef:
+              name: client-envs
 
 ---
 apiVersion: v1
