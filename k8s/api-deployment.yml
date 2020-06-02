@@ -37,6 +37,7 @@ metadata:
   annotations:
       prometheus.io/scrape: 'true'
       prometheus.io/port:   '5000'
+      prometheus.io/path:   '/swagger-stats/metrics'
 spec:
   type: NodePort
   selector:

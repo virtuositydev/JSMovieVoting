@@ -3,13 +3,12 @@ const keys = require('./keys');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const prometheus = require('prom-client');
+var swStats = require('swagger-stats');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-
-const metricsInterval = prometheus.collectDefaultMetrics({prefix: "movie_voting_api_"});
+app.use(swStats.getMiddleware({metricsPrefix: 'movie_voting_'}));
 
 // Postgres
 const { Pool } = require('pg');
@@ -31,52 +30,37 @@ app.get('/', (req, res) => {
   res.send('Hello, Movie Voters!');
 });
 
-app.get('/movies', async (req, res) => {
-  const movies = await pgClient.query('SELECT * FROM movies')
-    .catch(err => console.log(err));
-  res.send(movies.rows);
-});
-
-app.post('/movies', async (req, res) => {
-  const id = req.body.id;
-  const votesIncrement = req.body.votes || 1;
-
-  const votes = await pgClient.query('SELECT votes FROM movies WHERE movie_id=$1', [id])
-    .catch(err => console.log(err));
-  if(votes.rowCount) {
-    const newVotes = Number(votes.rows[0]['votes']) + votesIncrement;
-    const movie = await pgClient.query('UPDATE movies SET votes=$1 WHERE movie_id=$2 RETURNING movie_id, votes', [newVotes, id])
-      .catch(err => console.log(err));
-    res.send(movie.rows[0]);
-  }
-  else {
-    const movie = await pgClient.query('INSERT INTO movies(movie_id, votes) VALUES($1, $2) RETURNING movie_id, votes', [id, votesIncrement])
-      .catch(err => console.log(err));
-    res.send(movie.rows[0]);
+app.get('/movies', async (req, res, next) => {
+  try {
+    const movies = await pgClient.query('SELECT * FROM movies')
+    res.send(movies.rows);
+  } catch (err) {
+    console.error(err);
+    next(err);
   }
 });
 
-app.get('/metrics', (req, res) => {
-  res.set('Content-Type', prometheus.register.contentType)
-  res.end(prometheus.register.metrics())
-})
+app.post('/movies', async (req, res, next) => {
+  try {
+    const id = req.body.id;
+    const votesIncrement = req.body.votes || 1;
+
+    const votes = await pgClient.query('SELECT votes FROM movies WHERE movie_id=$1', [id])
+    if(votes.rowCount) {
+      const newVotes = Number(votes.rows[0]['votes']) + votesIncrement;
+      const movie = await pgClient.query('UPDATE movies SET votes=$1 WHERE movie_id=$2 RETURNING movie_id, votes', [newVotes, id])
+      res.send(movie.rows[0]);
+    }
+    else {
+      const movie = await pgClient.query('INSERT INTO movies(movie_id, votes) VALUES($1, $2) RETURNING movie_id, votes', [id, votesIncrement])
+      res.send(movie.rows[0]);
+    }
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
 
 app.listen(5000, err => {
   console.log('listening');
 });
-
-
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  clearInterval(metricsInterval)
-
-  server.close((err) => {
-    if (err) {
-      console.error(err)
-      process.exit(1)
-    }
-
-    process.exit(0)
-  })
-})
-

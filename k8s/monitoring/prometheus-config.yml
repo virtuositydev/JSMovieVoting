@@ -48,6 +48,9 @@ data:
         - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
           action: keep
           regex: true
+        - source_labels: [__meta_kubernetes_pod_container_name]
+          action: keep
+          regex: .*-exporter
         - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
           action: replace
           target_label: __metrics_path__
@@ -65,6 +68,8 @@ data:
         - source_labels: [__meta_kubernetes_pod_name]
           action: replace
           target_label: kubernetes_pod_name
+        - source_labels: [__meta_kubernetes_pod_container_name]
+          target_label: job
 
       - job_name: 'kubernetes-cadvisor'
         scheme: https
