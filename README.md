@@ -9,7 +9,7 @@ The movie voting app collects votes from users on the favourite movies. The app 
 
 A simple illustration of the application architecture:
 
-![alt text](images/apparch.png "Application architecture")
+<img src="./images/apparch.png" alt="Application architecture" width="75%"/>
 
 ## Docker deployment
 
@@ -22,17 +22,17 @@ $ docker-compose up --build –d
 
 Also included in the project are the application’s yaml files for Kubernetes deployment, accessible in the **“k8s”** folder. While the **“logging”** and **“monitoring”** folders inside the **“k8s”** folder contains yaml files for **ELK stack** logging and **Prometheus** monitoring deployment on Kubernetes. The deployment architecture of the application on Kubernetes is illustrated below. 
 
-<div style="display: block; text-align: center;">
-  <img src="./images/apparch.png" alt="Application deployment architecture on Kubernetes" width="75%"/>
-</div>
-<p style="text-align: center;">&#8673 Application deployment architecture on Kubernetes</p>
+<p align="center">
+  <img src="./images/appdeploy.png" alt="Application deployment architecture on Kubernetes" width="75%"/>
+</p>
+<p align="center">&#8673 Application deployment architecture on Kubernetes</p>
 
-<div style="display: block; text-align: center;">
+<p align="center">
   <img src="./images/elkdeploy.png" alt="Basic ELK stack architecture on Kubernetes" width="75%"/>
-</div>
-<p style="text-align: center;">&#8673 Basic ELK stack architecture on Kubernetes</p>
+</p>
+<p align="center">&#8673 Basic ELK stack architecture on Kubernetes</p>
 
-<div style="display: block; text-align: center;">
+<p align="center">
   <img src="./images/promdeploy.png" alt="Basic Prometheus architecture on Kubernetes" width="75%"/>
-</div>
-<p style="text-align: center;">&#8673 Basic Prometheus architecture on Kubernetes</p>
+</p>
+<p align="center">&#8673 Basic Prometheus architecture on Kubernetes</p>
