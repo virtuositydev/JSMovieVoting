@@ -65,7 +65,7 @@ metadata:
   name: api
 spec:
   type: LoadBalancer
-  loadBalancerIP: "10.96.220.181"
+  loadBalancerIP: "10.10.30.15"
   selector:
     app: api
   ports:
@@ -109,7 +109,7 @@ metadata:
   name: client
 spec:
   type: LoadBalancer
-  loadBalancerIP: "10.100.55.133"
+  loadBalancerIP: "10.10.30.14"
   selector:
     app: client
   ports:
@@ -136,6 +136,6 @@ spec:
         image: vsgdev/movie-voting-client:2026v1
         env:
           - name: REACT_APP_API_URL
-            value: "http://10.96.220.181:5001"
+            value: "http://10.10.30.15:5001"
         ports:
           - containerPort: 3000
