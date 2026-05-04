@@ -64,10 +64,12 @@ kind: Service
 metadata:
   name: api
 spec:
+  type: LoadBalancer
   selector:
     app: api
   ports:
     - port: 5000
+      targetPort: 5000
 
 ---
 apiVersion: apps/v1
