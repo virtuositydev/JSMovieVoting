@@ -65,10 +65,11 @@ metadata:
   name: api
 spec:
   type: LoadBalancer
+  loadBalancerIP: "10.96.220.181"
   selector:
     app: api
   ports:
-    - port: 5000
+    - port: 5001
       targetPort: 5000
 
 ---
@@ -86,6 +87,10 @@ spec:
       labels:
         app: api
     spec:
+      initContainers:
+      - name: wait-for-postgres
+        image: busybox:1.28
+        command: ['sh', '-c', "until nc -zv postgres 5432; do echo waiting; sleep 2; done"]
       containers:
       - name: api
         image: vsgdev/movie-voting-api:2026v1
@@ -104,6 +109,7 @@ metadata:
   name: client
 spec:
   type: LoadBalancer
+  loadBalancerIP: "10.100.55.133"
   selector:
     app: client
   ports:
@@ -130,6 +136,6 @@ spec:
         image: vsgdev/movie-voting-client:2026v1
         env:
           - name: REACT_APP_API_URL
-            value: "http://api:5000"
+            value: "http://10.96.220.181:5001"
         ports:
           - containerPort: 3000
