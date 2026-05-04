@@ -26,8 +26,8 @@ jobs:
 
       - name: Build and Push Client
         run: |
-          docker build -t vsgdev/movie-voting-client:2026v1 ./client -f ./client/Dockerfile-dev
-          docker push vsgdev/movie-voting-client:2026v1
+          docker build -t vsgdev/movie-voting-client:2026v1blue ./client -f ./client/Dockerfile-dev
+          docker push vsgdev/movie-voting-client:2026v1blue
 
       - name: VKS Cluster Login
         env:
@@ -39,9 +39,6 @@ jobs:
         run: |
           # Apply the latest manifests
           kubectl apply -f k8s.yaml
-
-          # Restarts web app to get new image
-          kubectl rollout restart deploy client
 
       - name: Verify Deployment
         run: |

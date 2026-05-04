@@ -133,7 +133,7 @@ spec:
     spec:
       containers:
       - name: client
-        image: vsgdev/movie-voting-client:2026v1
+        image: vsgdev/movie-voting-client:2026v1blue
         env:
           - name: REACT_APP_API_URL
             value: "http://10.10.30.15:5001"
