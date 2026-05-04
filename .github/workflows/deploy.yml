@@ -30,6 +30,8 @@ jobs:
           docker push vsgdev/movie-voting-client:2026v1
 
       - name: VKS Cluster Login
+        env:
+          KUBECTL_VSPHERE_PASSWORD: ${{ secrets.KUBECTL_VSPHERE_PASSWORD }}
         run: |
           /home/ubuntu/Desktop/vks-workspace/login/login-cluster
 
