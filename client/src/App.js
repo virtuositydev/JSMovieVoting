@@ -45,7 +45,8 @@ class App extends Component {
     const { movies } = this.state;
     return (
       <div>
-        <nav className="navbar is-primary" role="navigation" aria-label="main navigation">
+        {/* <nav className="navbar is-primary" role="navigation" aria-label="main navigation"> */}
+        <nav className="navbar is-info" role="navigation" aria-label="main navigation">
           <section className="container">
             <div className="navbar-brand">
               <strong className="navbar-item">All Time Best TV Series</strong>
