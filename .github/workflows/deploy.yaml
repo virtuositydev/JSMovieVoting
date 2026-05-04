@@ -40,6 +40,9 @@ jobs:
           # Apply the latest manifests
           kubectl apply -f k8s.yaml
 
+          # Restarts web app to get new image
+          kubectl rollout restart deploy client
+
       - name: Verify Deployment
         run: |
           kubectl get pods
