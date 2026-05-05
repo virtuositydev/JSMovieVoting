@@ -86,6 +86,11 @@ spec:
     metadata:
       labels:
         app: api
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/swagger-stats/metrics"
+        prometheus.io/port: "5000"
+        prometheus.io/scheme: "http"
     spec:
       initContainers:
       - name: wait-for-postgres
