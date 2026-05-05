@@ -21,8 +21,8 @@ jobs:
 
       - name: Build and Push API
         run: |
-          docker build -t vsgdev/movie-voting-api:2026v1 ./server -f ./server/Dockerfile-dev
-          docker push vsgdev/movie-voting-api:2026v1
+          docker build -t vsgdev/movie-voting-api:2026v2 ./server -f ./server/Dockerfile-dev
+          docker push vsgdev/movie-voting-api:2026v2
 
       - name: Build and Push Client
         run: |

@@ -98,7 +98,7 @@ spec:
         command: ['sh', '-c', "until nc -zv postgres 5432; do echo waiting; sleep 2; done"]
       containers:
       - name: api
-        image: vsgdev/movie-voting-api:2026v1
+        image: vsgdev/movie-voting-api:2026v2
         envFrom:
           - secretRef:
               name: db-secrets
