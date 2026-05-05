@@ -50,10 +50,12 @@ app.post('/movies', async (req, res, next) => {
       const newVotes = Number(votes.rows[0]['votes']) + votesIncrement;
       const movie = await pgClient.query('UPDATE movies SET votes=$1 WHERE movie_id=$2 RETURNING movie_id, votes', [newVotes, id])
       res.send(movie.rows[0]);
+      console.log("[MovieVoting] Votes Received for ID: ", id);
     }
     else {
       const movie = await pgClient.query('INSERT INTO movies(movie_id, votes) VALUES($1, $2) RETURNING movie_id, votes', [id, votesIncrement])
       res.send(movie.rows[0]);
+      console.log("[MovieVoting] Votes Received for ID: ", id);
     }
   } catch (err) {
     console.error(err);
